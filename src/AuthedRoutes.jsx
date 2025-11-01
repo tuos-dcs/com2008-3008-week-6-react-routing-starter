@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
 
 import Posts from "./Posts.jsx";

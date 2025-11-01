@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Alert, Button, Form, Stack } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Button, Form, Stack } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
 import { isEmpty } from "lodash";
 
 const PostEditForm = ({ client }) => {
@@ -12,15 +12,10 @@ const PostEditForm = ({ client }) => {
   useEffect(() => {
     client.getPost(postId)
       .then(({ data }) => setPost(data))
-      .catch(() => setHasError(true))
   }, []);
-
-  const nav = useNavigate();
 
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
-
-  const [hasError, setHasError] = useState(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -29,37 +24,16 @@ const PostEditForm = ({ client }) => {
     const body = bodyRef.current.value;
 
     client.updatePost({ title, body }, postId)
-      .then(() => {
-        setHasError(false);
-        titleRef.current.value = "";
-        bodyRef.current.value = "";
-        nav("/");
-      })
-      .catch(() => {
-        setHasError(true);
-      });
   };
 
   const deleteHandler = () => {
     client.deletePost(postId)
-      .then(() => {
-        setHasError(false);
-        nav("/");
-      })
-      .catch(() => {
-        setHasError(true);
-      });
   }
 
   return (
     <Form className="mt-2" onSubmit={submitHandler}>
       <h1>Edit Post</h1>
       <p>Back to <Link to={"/"}>posts</Link>.</p>
-      {hasError && (
-        <Alert variant="danger">
-          An error occurred (this is an unhelpful message that we shall improve later)
-        </Alert>
-      )}
       {!isEmpty(post) && (
         <>
           <Form.Group controlId="title">
